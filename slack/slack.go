@@ -54,17 +54,18 @@ func SendWeeklySchedule(user string) error {
 }
 
 func makeSlackScheduleStr(user, date, context, WorkListStr string) string {
+	message := ""
 
-	mention := fmt.Sprintf(`"text": {"type": "mrkdwn", "text": "<@%s>"}`, static.MemberID[user])
-	button := fmt.Sprintf(
-		`"accessory": {"type": "button", "text": {"type": "plain_text", "text": "업무 보드 노션 페이지"}, "url": "%s"}`,
-		static.NOTION_BOARD_PAGE_URL,
-	)
+	mention := fmt.Sprintf(`{"type": "mrkdwn", "text": "<@%s>"}`, static.MemberID[user])
+	// button := fmt.Sprintf(
+	// 	`"accessory": {"type": "button", "text": {"type": "plain_text", "text": "업무 보드 노션 페이지"}, "url": "%s"}`,
+	// 	static.NOTION_BOARD_PAGE_URL,
+	// )
 	header := fmt.Sprintf("%s 업무 일정", date)
 
-	message := fmt.Sprintf(`{"type": "section", %s, %s}, `, mention, button)
+	// message := fmt.Sprintf(`{"type": "section", %s, %s}, `, mention, button)
 	message += fmt.Sprintf(`{"type": "header", "text": {"type": "plain_text", "text": "%s"}}, `, header)
-	message += fmt.Sprintf(`{"type": "context", "elements": [{"type": "plain_text", "text": "%s"}]}, `, context)
+	message += fmt.Sprintf(`{"type": "context", "elements": [{"type": "plain_text", "text": "%s"}, %s]}, `, context, mention)
 	message += `{"type": "divider"}, `
 
 	message += WorkListStr
@@ -118,6 +119,9 @@ func makeSlackWork(scheduleList []model.NotionRow) string {
 }
 
 func sendMessageToSlack(body string) error {
+	// fmt.Println(body)
+	// return nil
+
 	req, err := http.NewRequest(
 		"POST",
 		static.SLACK_WEBHOOK_URL,

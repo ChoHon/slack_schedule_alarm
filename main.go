@@ -46,6 +46,9 @@ func SendWeeklySchedule() {
 
 // func test() {
 // 	for name := range static.UserID {
-// 		slack.SendDailySchedule(name)
+// 		if name == "김현진" {
+// 			slack.SendWeeklySchedule(name)
+// 			slack.SendDailySchedule(name)
+// 		}
 // 	}
 // }
